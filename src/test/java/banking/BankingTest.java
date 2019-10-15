@@ -63,6 +63,30 @@ public class BankingTest {
 		assertEquals("Balance incorrecte !", before0 - amount, myDAO.balanceForCustomer(fromCustomer), 0.001f);
 		assertEquals("Balance incorrecte !", before1 + amount, myDAO.balanceForCustomer(toCustomer), 0.001f);				
 	}
+        
+                      /*
+                                Q1 : Si lors de la transaction le solde du compte débité devient négatif
+                                Dans ce cas la on essaye de trop débité, donc le débit est impossible et rien ne change.
+                      */
+                      
+                     @Test
+                     public void transactionRefuser() throws Exception {
+                                            float amount = 10.0f;
+		int fromCustomer = 0; // Le client 0 dispose de 100€ dans le jeu de tests
+		int toCustomer = 1;
+		// On mémorise les balances dans les deux comptes avant la transaction
+		float before0 = myDAO.balanceForCustomer(fromCustomer);
+		float before1 = myDAO.balanceForCustomer(toCustomer);
+                                            try{
+                                                                 // Ici on effectue un débit trop important
+                                                                 myDAO.bankTransferTransaction(fromCustomer, toCustomer, before0 + amount);
+                                                                 fail();// Ici exception attendu
+                                            }catch (Exception ex){
+                                                                 // Vérification que rien n'a bouger 
+                                                                 assertEquals("Balance incorrecte !", before0 , myDAO.balanceForCustomer(fromCustomer), 0.001f);
+                                                                 assertEquals("Balance incorrecte !", before1 , myDAO.balanceForCustomer(toCustomer), 0.001f);
+                                            }
+                     }
 	
 
 	public static DataSource getDataSource() throws SQLException {
