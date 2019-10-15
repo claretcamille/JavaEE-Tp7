@@ -122,6 +122,26 @@ public class BankingTest {
                                                                  assertEquals("Balance incorrecte !", before , myDAO.balanceForCustomer(fromCustomer), 0.001f);
                                             }
                      }
+                     
+                     // Test si on veut retirer un montant négatif
+                     @Test
+                     public void transacNegative() throws Exception {
+                                            float amount = -10.0f;
+		int fromCustomer = 0; // Le client 0 dispose de 100€ dans le jeu de tests
+		int toCustomer = 1;
+		// On mémorise les balances dans les deux comptes avant la transaction
+		float before0 = myDAO.balanceForCustomer(fromCustomer);
+		float before1 = myDAO.balanceForCustomer(toCustomer);
+                                            try{
+                                                                 // Ici on effectue un débit trop important
+                                                                 myDAO.bankTransferTransaction(fromCustomer, toCustomer,  amount);
+                                                                 fail();// Ici exception attendu
+                                            }catch (Exception ex){
+                                                                 // Vérification que rien n'a bouger 
+                                                                 assertEquals("Balance incorrecte !", before0 , myDAO.balanceForCustomer(fromCustomer), 0.001f);
+                                                                 assertEquals("Balance incorrecte !", before1 , myDAO.balanceForCustomer(toCustomer), 0.001f);
+                                            }
+                     }
 	
 
 	public static DataSource getDataSource() throws SQLException {
