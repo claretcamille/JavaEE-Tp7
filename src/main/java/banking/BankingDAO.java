@@ -51,11 +51,17 @@ public class BankingDAO {
 			PreparedStatement statement = myConnection.prepareStatement(sql)) {
 			
 			myConnection.setAutoCommit(false); // On démarre une transaction
-			try {
+			try {             
+                                                                                        
 				// On débite le 1° client
 				statement.setFloat( 1, amount * -1);
 				statement.setInt(2, fromID);
 				int numberUpdated = statement.executeUpdate();
+                                                                                        
+                                                                                       // Tout s'est bien passé, on peut valider la transaction
+                                                                                        if(numberUpdated  != 1){
+                                                                                                             throw new Exception("Le client  n'existe pas");
+                                                                                        }
 
 				// On crédite le 2° client
 				statement.clearParameters();
@@ -64,7 +70,12 @@ public class BankingDAO {
 				numberUpdated = statement.executeUpdate();
 
 				// Tout s'est bien passé, on peut valider la transaction
-				myConnection.commit();
+                                                                                        if(numberUpdated  != 1){
+                                                                                                             throw new Exception("Le client  n'existe pas");
+                                                                                        }else{
+                                                                                                             myConnection.commit();
+                                                                                        }
+				
 			} catch (Exception ex) {
 				myConnection.rollback(); // On annule la transaction
 				throw ex;       
