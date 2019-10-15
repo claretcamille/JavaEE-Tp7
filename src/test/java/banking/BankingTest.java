@@ -98,28 +98,28 @@ public class BankingTest {
                                             float amount = 10.0f;
                                             int toCustomer = 0; // Le client existe dans la DAO
 		int fromCustomer = 100; // client qui n'existe pas dans la DAO
-                                            float before1 = myDAO.balanceForCustomer(toCustomer);// Mémorisation de la balance du client existant
+                                            float before = myDAO.balanceForCustomer(toCustomer);// Mémorisation de la balance du client existant
                                             try{
                                                                  myDAO.bankTransferTransaction(fromCustomer, toCustomer, amount);
                                                                  fail();// Ici exception attendu
                                             }catch (Exception ex){
                                                                   // Vérification qu'aucune transavtion n'a eu lieu
-                                                                 assertEquals("Balance incorrecte !", before1 , myDAO.balanceForCustomer(toCustomer), 0.001f);
+                                                                 assertEquals("Balance incorrecte !", before , myDAO.balanceForCustomer(toCustomer), 0.001f);
                                             }
                      }
                     
                      @Test
                      public void debitInconnue() throws Exception{
                                            float amount = 10.0f;
-                                            int toCustomer = 100; // Le client existe dans la DAO
-		int fromCustomer = 0; // client qui n'existe pas dans la DAO
-                                            float before1 = myDAO.balanceForCustomer(toCustomer);// Mémorisation de la balance du client existant
+                                            int toCustomer = 100; // Le client n'existe pas dans la DAO
+		int fromCustomer = 0; // client qui existe dans la DAO
+                                            float before = myDAO.balanceForCustomer(fromCustomer);// Mémorisation de la balance du client existant
                                             try{
-                                                                 myDAO.bankTransferTransaction(fromCustomer, toCustomer, amount);
+                                                                  myDAO.bankTransferTransaction(fromCustomer, toCustomer, amount);
                                                                  fail();// Ici exception attendu
                                             }catch (Exception ex){
                                                                   // Vérification qu'aucune transavtion n'a eu lieu
-                                                                 assertEquals("Balance incorrecte !", before1 , myDAO.balanceForCustomer(toCustomer), 0.001f);
+                                                                 assertEquals("Balance incorrecte !", before , myDAO.balanceForCustomer(fromCustomer), 0.001f);
                                             }
                      }
 	
